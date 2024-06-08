@@ -99,21 +99,17 @@ class DataApp(server.App):
         return df_filtered
 
     def getPlot(self, params):
+        df_filtered = self.getData(params)
         parameter = params["parameter"]
         region_id = int(params["region"])
-        years = params["years_interval"].split('-')
-        weeks_interval = params["weeks_interval"].split('-')
-
-        df_filtered = df[(df['Year'].astype(int).between(int(years[0]), int(years[1]))) &
-                         (df['Week'].between(int(weeks_interval[0]), int(weeks_interval[1]))) &
-                         (df['region_id'] == region_id)][['Year', 'Week', parameter]]
 
         fig, ax = plt.subplots(figsize=(12, 6))
 
-        for year in range(int(years[0]), int(years[1]) + 1):
-            df_year = df_filtered[df_filtered['Year'] == str(year)]
+        years = df_filtered['Year'].unique()
+        for year in years:
+            df_year = df_filtered[df_filtered['Year'] == year]
             if not df_year.empty:
-                ax.scatter(df_year['Week'], df_year[parameter], label=str(year))
+                ax.
 
         ax.set_title(f"Динаміка {parameter} для {reg_id_name[region_id]}")
         ax.set_xlabel("Тижні")
